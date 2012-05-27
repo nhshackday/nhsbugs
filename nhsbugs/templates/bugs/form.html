@@ -1,0 +1,25 @@
+<form action="/bugs/report/" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.title.label }}
+    {{ form.title }}<br/>
+    {% if form.title.errors %}
+        {{form.title.errors }}
+    {% endif %}
+
+    {{ form.description.label }}
+    {{ form.description }}<br/>
+    {% if form.description.errors %}
+        {{form.description.errors }}
+    {% endif %}
+
+    {{ form.hospital.label }}
+    {{ form.hospital }}<br/>
+    {% if form.hospital.errors %}
+        {{form.hospital.errors }}
+    {% endif %}
+
+    {{ form.pic.label }}
+    {{ form.pic }}<br/>
+
+    <input type='Submit' value="Report it!"></input>
+</form>

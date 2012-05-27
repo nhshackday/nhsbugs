@@ -11,8 +11,14 @@
 
 @interface ViewController : UIViewController<UISearchBarDelegate>{
     IBOutlet UITableView *searchtable;
-    NSMutableArray *dummyarray;
+    NSDictionary *hospitalJSON;
+    NSMutableArray *namesArray, *coordsArray, *nearbyLocations;
     GetLocation *grabLocation;
+    BOOL located;
+    IBOutlet UILabel *nearby, *notwhatlooking;
+    IBOutlet UIButton *manual;
 }
-
+@property(nonatomic, retain) NSMutableArray *nearbyLocations;
+-(void)autoLocated:(id)sender;
+-(void)manualEntry:(id)sender;
 @end
