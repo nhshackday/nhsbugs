@@ -5,18 +5,20 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpRespons
 from django.shortcuts import render_to_response, redirect, get_object_or_404, render
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
+from voting.models import Vote
 
 from bugs.models import Bug
 from forms import LoginForm
+from bugs.forms import BugForm
 
 def home(request):
-    top_bugs = Bug.objects
-    if top_bugs.count < 10:
-        top_bugs = Bug.objects.all()
-    else:
-        top_bugs = Bug.objects.order_by('title')[:10]
+    recent_bugs = Bug.objects.order_by('-update_date')
+    form = BugForm(initial={"reporter":request.user})
     return render_to_response('home.html',
-                               {},
+                               {
+                               'top_bugs': recent_bugs,
+                               'form': form
+                               },
                                context_instance=RequestContext(request))
 
 def logout_view(request):
@@ -32,7 +34,6 @@ def login_view(request):
                                 password=form.cleaned_data['password'])
             if user is not None:
                 if user.is_active:
-                    print user
                     login(request, user)
                     return HttpResponseRedirect(request.GET.get('next', '/'))
                 else:

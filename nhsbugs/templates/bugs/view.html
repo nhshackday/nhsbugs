@@ -1,16 +1,69 @@
 {% extends "base.html" %}
-
-
+{% load comments %}
 
 {% block content %}
 
-<h1>{{ bug.title }}</h1>
+{{ votes_up }} | {{ votes_down }} | {{ votes_total }}
+User_Voted: {{ user_vote }}
+<br/>
+<a href="{% url vote_bug slug=bug.slug score=1%}">Vote UP</a><br/>
+<a href="{% url vote_bug slug=bug.slug score=-1%}">Vote Down</a><br/>
 
-{% if bug.pic %}
-<img src="{{ MEDIA_URL }}/{{bug.pic}}" width="100" height="100"/>
-{% else %}
-No picture
-{% endif %}
-{{ bug.description }}
 
+<article>
+    <h1>{{ bug.title }}</h1>
+
+    {% if bug.pic %}
+    <img src="{{ MEDIA_URL }}/{{bug.pic}}" width="100" height="100"/>
+    {% else %}
+    <p>--No picture--</p>
+    {% endif %}
+
+</article>
+
+
+    <section class="bugsList">
+        {% include 'bugs/detail.html' %}
+    </section>
+
+{% get_comment_list for bug as comment_list %}
+{% get_comment_count for bug as comment_count %}.
+<section class="comment">
+<p>There are {{comment_count}} comments</p>
+{% for comment in comment_list %}
+    <a name="c{{ comment.id }}"></a>
+    <a href="{% get_comment_permalink comment %}"></a>Posted by {{ comment.user }} at {{ comment.submit_date}}
+    <p>
+       {{ comment.comment }}
+    </p>
+    <hr/>
+{% endfor %}
+
+<h1>Leave a comment</h1>
+{% get_comment_form for bug as form %}
+<table>
+  <form action="{% comment_form_target %}" method="post">
+    {% csrf_token %}
+    <input id="id_name" type="hidden" value="{{request.user.username}}" name="name" maxlength="50">
+    <input type="hidden" name="email" id="id_email" value="{{request.user.email}}">
+    <input type="hidden" name="url" id="id_url">
+    <textarea id="id_comment" rows="10" cols="40" name="comment"></textarea>
+
+    <input type="hidden" name="honeypot" id="id_honeypot">
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+</td>
+    <tr>
+      <td colspan="2">
+        <input type="submit" name="submit" value="Post">
+        <input type="hidden" name="next" value="{% url view_bug slug=bug.slug%}" />
+      </td>
+    </tr>
+  </form>
+</table>
+
+
+</section>
 {% endblock %}
