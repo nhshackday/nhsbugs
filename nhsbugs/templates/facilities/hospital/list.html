@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<h1>List of hospitals</h1>
+
+<p>Filter: <input id="hospitalQuicksearch" /></p>
+
+<section class="first">
+    <ul class="hospitals">
+{% for hospital in hospitals_a %}
+        <li>
+            <a href="/hospital/{{ hospital.slug }}" title="View {{ hospital.name }}">{{ hospital.name }}</a>
+        </li>
+{% endfor %}
+    </ul>
+</section>
+<section class="second">
+    <ul class="hospitals">
+{% for hospital in hospitals_b %}
+        <li>
+            <a href="/hospital/{{ hospital.slug }}" title="View {{ hospital.name }}">{{ hospital.name }}</a>
+        </li>
+{% endfor %}
+    </ul>
+</section>
+
+<script type="text/javascript">
+    $('input#hospitalQuicksearch').quicksearch('.first ul li');
+    $('input#hospitalQuicksearch').quicksearch('.second ul li');
+</script>
+{% endblock %}

@@ -7,17 +7,25 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from voting.models import Vote
 
+from voting.models import Vote
 from bugs.models import Bug
 from forms import LoginForm
 from bugs.forms import BugForm
+from facilities.models import Hospital
 
 def home(request):
     recent_bugs = Bug.objects.order_by('-update_date')
+
+    for bug in recent_bugs:
+        bug.more = True;
+
+    hospitals = Hospital.objects.order_by('name').all()
     form = BugForm(initial={"reporter":request.user})
     return render_to_response('home.html',
                                {
-                               'top_bugs': recent_bugs,
-                               'form': form
+                               'recent_bugs': recent_bugs,
+                               'form': form,
+                               'hospitals': hospitals
                                },
                                context_instance=RequestContext(request))
 

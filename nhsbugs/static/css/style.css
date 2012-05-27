@@ -195,46 +195,61 @@ td { vertical-align: top; }
 }
 
 /* NHS Bugs Design & Layout */
+article h2 {
+    font-size: 1.1em;
+}
+html {
+    background-color: #eee;
+}
 body {
     font-family: 'open sans', sans-serif;
     background-color: #fff;
     margin: 0;
     padding: 0;
 }
-time {
+time, .meta span {
+    display: block;
     font-size: 0.8em;
     color: #888;
 }
-header {
+.top {
     background-color: #eee;
     box-shadow: 0 -20px 20px 20px #888;
 }
 header h1 {
     font-weight: 300;
+    height: 77px;
+    line-height: 77px;
+    padding: 0;
+    margin: 0;
 }
-header nav ul:after {
+header img {
+    float: left;
+    margin: 10px 10px 10px 0;
+}
+nav ul:after {
     content: '';
     width: 0;
     height: 0;
     clear: both;
     display: block;
 }
-header nav li {
+nav li {
     float: left;
     padding: 10px 20px;
     position: relative;
 }
-header nav li  a, header nav li  a:visited, header nav li  a:link, header nav li a:hover {
+nav li  a, nav li  a:visited, nav li  a:link, nav li a:hover {
     color: inherit;
     text-decoration: none;
 }
-header nav li  a:hover {
+nav li  a:hover {
     color: #aaa;
 }
-header nav li:first-child {
+nav li:first-child {
     padding-left: 0;
 }
-header nav li.selected:after {
+nav li.selected:after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -246,16 +261,23 @@ header nav li.selected:after {
     border: 5px solid transparent;
     border-bottom-color: #aaa;
 }
-header nav li.selected:first-child:after {
+nav li.selected:first-child:after {
     margin-left: -10px;
 }
-header h1, header nav, .main {
+
+header, .main, footer {
     max-width: 920px;
-    padding: 20px;
     margin: 0 auto;
 }
-header nav {
-    padding: 0 20px;
+nav {
+    padding: 0;
+}
+.userInfo {
+    color: #666666;
+    margin-right: 3px;
+}
+.main {
+    padding: 20px 0;
 }
 .main:after {
     content: '';
@@ -271,20 +293,42 @@ header nav {
     margin: 0;
 }
 .main>section:first-of-type {
-    box-sizing: border-box;
+    margin-top: 1px;
+    -moz-box-sizing:    border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing:         border-box;
     padding-right: 20px;
 }
 .main>section:first-of-type+section {
+    -moz-box-sizing:    border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing:         border-box;
     box-sizing: border-box;
     padding-left: 20px;
     border-left: 2px solid #ccc;
 }
-footer {
+.bottom {
     background-color: #eee;
-    padding: 20px;
     box-shadow: inset 0 10px 10px -10px #aaa;
-    text-align: center;
+}
+footer {
+    font-size: 0.9em;
     color: #666666;
+    overflow: hidden;
+}
+footer nav {
+    float: left;
+}
+footer nav img {
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: -3px;
+}
+
+.meta {
+    float: right;
+    text-align: right;
 }
 
 .bugsList article {
@@ -301,28 +345,134 @@ footer {
     margin-right: 20px;
 }
 .bugsList article hgroup {
-    clear: right;
+    float: left;
     overflow: hidden;
+    margin-bottom: 10px;
+}
+.bugsList article h1, .bugsList article hgroup h2 {
+    margin: 0;
 }
 .bugsList article hgroup h2 {
-    float: left;
     font-size: 1em;
     font-weight: normal;
-    margin: 0 0 0 10px;
     color: #888;
 }
-.bugsList article h1 {
-    margin: 0;
-    float: left;
-}
-.bugsList article time {
-    float: right;
-    float: right;
-}
-.bugsList .summary {
+.bugsList .detail {
+    clear: left;
     margin-bottom: 10px;
 }
 .bugsList .more {
     float: right;
     font-size: 0.8em;
+}
+
+/* Tablez */
+table {
+    border: none;
+}
+td , th {
+    padding: 10px;
+    background-color: #eee;
+    border: 5px solid #fff;
+}
+
+/* Forms */
+form:after {
+    content: '';
+    display: block;
+    height: 0;
+    width: 0;
+    clear: both;
+}
+form label {
+    float: left;
+    text-align: right;
+    margin: 5px 10px 5px 5px;
+    padding: 5px 0;
+    width: 150px;
+}
+form input {
+    height: 20px;
+    width: 200px;
+    padding: 5px;
+    margin: 5px 10px 5px 5px;
+}
+form input,
+form textarea,
+form select {
+    float: left;
+    border-radius: 4px;
+}
+form textarea{
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    /* float: none;
+    width: 100%; */
+}
+form select {
+    text-indent: 7px;
+    padding: 0;
+    width: 212px;
+    height: 30px;
+    margin: 5px 10px 7px 5px;
+}
+button {
+    clear: both;
+    float: right;
+    padding: 10px;
+    background-color: #990000;
+    border-radius: 4px;
+    height: auto;
+    color: #ffffff;
+    border: none;
+    min-width: 100px;
+}
+
+button:hover {
+    color: #eeeeee;
+    background-color: #cc0000;
+}
+
+@media (max-width: 35em) {
+    .main>section {
+        float: none;
+        width: auto;
+        border: none;
+    }
+    .main>section:first-of-type {
+        padding-right: 0;
+        padding-bottom: 20px;
+    }
+    .main>section:first-of-type+section {
+        padding-left: 0;
+        padding-top: 20px;
+        border-left: none;
+        border-top: 2px solid #ccc;
+    }
+}
+
+.voting {
+    float: right;
+    margin-left: 5px;
+}
+.voting a {
+    text-decoration: none;
+}
+.legal {
+    font-size: 0.8em;
+    float: right;
+    margin-top: 12px;
+}
+.comment textarea {
+    width: 100%;
+}
+
+.hospitals {
+    margin: 0;
+    padding: 0;
+}
+.hospitals li{
+    list-style-type: none;
+    padding: 5px;
 }

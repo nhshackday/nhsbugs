@@ -1,3 +1,11 @@
+{% load active_tag %}
+
+{% url home as home_x %}
+{% url hospital:list as hospital_x %}
+{% url login as login_x %}
+{% url my_bugs as my_bugs_x %}
+
+
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -13,23 +21,35 @@
   <link rel="stylesheet" href="{{ MEDIA_URL }}/css/style.css">
 
   <script src="{{ MEDIA_URL }}/js/libs/modernizr-2.5.3.min.js"></script>
+  <script src="{{ MEDIA_URL }}/js/libs/jquery-1.7.1.min.js"></script>
+  <script src="{{ MEDIA_URL }}/js/libs/jquery.quicksearch.js"></script>
   {% block extra_head %}
   {% endblock %}
 </head>
+
 <body>
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-  <header>
-    {% block header %}
-    <h1>NHS Bugs</h1>
-    {% endblock %}
-    <nav>
-        <ul>
-            <li class="home"><a href="{% url home %}">Home</a></li>
-            <li class="list_hospitals"><a href="{% url list_hospitals %}">Hospitals</a></li>
-            <li class=""><a href="">Submit a bug</a></li>
-        </ul>
-    </nav>
-  </header>
+
+  <section class="top">
+      <header>
+        {% block header %}
+        <div class="logo"><img src="{{ MEDIA_URL }}/img/logo.png" /><h1>NHS Bugs</h1></div>
+        {% endblock %}
+        <nav>
+            <ul>
+                <li class="home {% active request home_x %}"><a href="{% url home %}">Home</a></li>
+                <li class="list_hospitals {% active request hospital_x %}"><a href="{% url hospital_list %}">Hospitals</a></li>
+                <li class="my_bugs {% active request my_bugs_x %}"><a href="{% url my_bugs %}">My Bugs</a></li>
+                {% if user.is_authenticated %}
+                <li><span class="userInfo {% active request login_x %}">Logged in as: {{ user.username }}</span>(<a href="{% url logout %}">Logout</a>)</li>
+                {% else %}
+                <li class="{% active request login_x %}"><a href="{% url login %}">Login/Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+      </header>
+  </section>
+
   <section class="main" role="main">
     {% if messages %}
     <ul class="messages">
@@ -46,12 +66,20 @@
     {% block aside %}
     {% endblock %}
   </aside>
-  <footer>
-    {% block extra_footer %}
-    {% endblock %}
-    <p>All content &copy; nhsbugs.net unless otherwise stated</p>
-  </footer>
 
+  <section class="bottom">
+      <footer>
+        {% block extra_footer %}
+        {% endblock %}
+        <nav>
+            <ul>
+                <li><a href="/about/">About</a></li>
+                <li><a href="http://checklisthq.com/checklist/4">Fault correction checklist</a></li>
+            </ul>
+        </nav>
+        <p class="legal">All content &copy; nhsbugs.net unless otherwise stated</p>
+      </footer>
+  </section>
 
   <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
   <script>window.jQuery || document.write('<script src="{{ MEDIA_URL }}/js/libs/jquery-1.7.1.min.js"><\/script>')</script>

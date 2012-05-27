@@ -1,25 +1,22 @@
 <form action="/bugs/report/" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.title.label }}
-    {{ form.title }}<br/>
-    {% if form.title.errors %}
-        {{form.title.errors }}
-    {% endif %}
+    
+    <label for="title">Title:</label>
+    <input id="title" name="title" type="text" value="{{ form.title.value|default:'' }}"
+        required class="{% if form.title.errors %}error{% endif %}" />
+    
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" class="{% if form.description.errors %}error{% endif %}">{{ form.description.value|default:'' }}</textarea>
+    
+    <label for="hospital">Hospital:</label>
+    <select id="hospital" name="hospital" required>
+    {% for hospital in hospitals %}
+        <option value="{{ hospital.id }}" {% ifequal form.hospital.value hospital.id %}selected{% endifequal %}>{{ hospital.name }}</option>
+    {% endfor %}
+    </select>
+    
+    <label for="pic">Picture:</label>
+    <input id="pic" name="pic" type="file" value={{ form.pic.value|default:'' }} />
 
-    {{ form.description.label }}
-    {{ form.description }}<br/>
-    {% if form.description.errors %}
-        {{form.description.errors }}
-    {% endif %}
-
-    {{ form.hospital.label }}
-    {{ form.hospital }}<br/>
-    {% if form.hospital.errors %}
-        {{form.hospital.errors }}
-    {% endif %}
-
-    {{ form.pic.label }}
-    {{ form.pic }}<br/>
-
-    <input type='Submit' value="Report it!"></input>
+    <button type='Submit'>Report it!</button>
 </form>

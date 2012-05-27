@@ -1,14 +1,39 @@
+{% load voting_tags %}
 <article>
     {% if bug.pic %}
-        <img class="thumbnail" src="{{ MEDIA_URL }}/{{ bug.pic }}" />
+        <a href="{{ MEDIA_URL }}/{{ bug.pic }}" target="_blank"><img class="thumbnail" src="{{ MEDIA_URL }}/{{ bug.pic }}" /></a>
     {% endif %}
 
     <hgroup>
         <h1>{{ bug.title }}</h1>
-        <h2>{{ bug.votes }} votes</h2>
-        <time pubdate>{{ bug.reported_date }}</time>
+        <h2>{{ bug.hospital }}</h2>
     </hgroup>
-    <p class="summary">{{ bug.description|truncatechars:50 }}</p>
+    {% if user.is_authenticated %}
+        {% vote_by_user user on bug as voted %}
+    {% endif %}
+    <section class="meta">
+        <span class="voting">
+{% if voted %}
+            (voted)
+{% else %}
+            <a href="{% url vote_bug slug=bug.slug score=1%}" class="up">&#9650;</a>
+            <a href="{% url vote_bug slug=bug.slug score=-1%}" class="down">&#9660;</a>
+{% endif %}
+        </span>
+        <span>
+            {{ bug.get_vote_counts }} votes
+        </span>
+        <time pubdate>{{ bug.report_date }}</time>
+{% if bug.more %}
+        <a href="{% url view_bug slug=bug.slug %}" class="more">More information</a>
+{% endif %}
+    </section>
 
-    <a href="{% url view_bug slug=bug.slug %}" class="more">More information</a>
+    <p class="detail">
+{% if bug.more %}
+    {{ bug.description|truncatechars:50 }}
+{% else %}
+    {{bug.description}}
+{% endif %}
+    </p>
 </article>
