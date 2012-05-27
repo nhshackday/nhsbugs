@@ -17,9 +17,9 @@ from facilities.models import Hospital
 def view_bug(request, slug):
     bug = get_object_or_404( Bug, slug=slug)
     votes = Vote.objects.get_for_object(bug)
-    votes_up = votes.get(1, 0)
-    votes_down = votes.get(-1, 0)
-    votes_total = votes.get(1, 0) + (votes.get(-1, 0) * -1)
+    votes_up = sum( [ 1 for x in votes if x.direction == 1])
+    votes_down = sum( [ 1 for x in votes if x.direction == -1])
+    votes_total = len(votes)
     user_vote = 0
     if request.user.is_authenticated():
         user_vote_list = Vote.objects.get_user_votes(request.user, obj=bug)
@@ -41,7 +41,7 @@ def vote_bug(request, slug, score):
     Vote.objects.record_vote(request.user, bug, int(score))
     bug.save() # we want activity
 
-    messages.add_message(request, messages.INFO, 'Thanks for voting up for %s' % bug.title )
+    #messages.add_message(request, messages.INFO, 'Thanks for voting up for %s' % bug.title )
 
     return HttpResponseRedirect("/bugs/view/%s" % bug.slug)
 
@@ -53,6 +53,8 @@ def report_bug(request,hospital_slug=None):
         init_data["hospital"] = hospital
     except Hospital.DoesNotExist:
         hospital = None
+
+    hospitals = Hospital.objects.order_by('name').all()
 
     form = BugForm(request.POST or None,
                    request.FILES or None,
@@ -72,6 +74,16 @@ def report_bug(request,hospital_slug=None):
     return render_to_response('bugs/report.html',
                                {
                                 "form": form,
-                                "hospitalKnown": not hospital is None
+                                "hospitalKnown": not hospital is None,
+                                "hospitals": hospitals
+                               },
+                               context_instance=RequestContext(request))
+
+@login_required
+def view_my_bugs(request):
+    bugs = Bug.objects.filter(reporter=request.user).order_by('-update_date').all()
+    return render_to_response('bugs/my_bugs.html',
+                               {
+                                  "bugs": bugs
                                },
                                context_instance=RequestContext(request))
